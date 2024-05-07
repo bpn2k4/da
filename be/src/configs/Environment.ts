@@ -1,0 +1,14 @@
+
+const ALLOW_FILE_EXTENSIONS = Bun.env.ALLOW_FILE_EXTENSIONS ? Bun.env.ALLOW_FILE_EXTENSIONS.split(',') : []
+const PORT = Bun.env.PORT ?? 4000
+const HOST = Bun.env.HOST ?? `http://localhost${PORT}`
+const MAX_NUMBER_FILE_PER_REQUEST = Bun.env.MAX_NUMBER_FILE_PER_REQUEST ?? 5
+const FILE_MAX_SIZE = Bun.env.FILE_MAX_SIZE ?? 10
+
+export const ENVIRONMENT = {
+  ALLOW_FILE_EXTENSIONS,
+  FILE_MAX_SIZE,
+  HOST,
+  MAX_NUMBER_FILE_PER_REQUEST,
+  PORT
+}

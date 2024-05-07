@@ -1,5 +1,5 @@
 
-export const STATUS_CODES = {
+export const STATUS_CODE = {
   SUCCESS: 200,
 
   BAD_REQUEST: 400,
@@ -7,7 +7,7 @@ export const STATUS_CODES = {
   INTERNAL_SERVER_ERROR: 500
 }
 
-export const STATUS_NAMES = {
+export const STATUS_NAME = {
   SUCCESS: 'success',
   FAIL: 'fail'
 }
