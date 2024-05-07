@@ -4,7 +4,7 @@ import { STATUS_CODE, STATUS_NAME } from '@configs'
 
 const ErrorHandler = (error: Error, req: Request, res: Response, next: NextFunction) => {
 
-  console.log(error)
+  console.log("error", error)
 
   return res.status(STATUS_CODE.INTERNAL_SERVER_ERROR).json({
     status: STATUS_NAME.FAIL

@@ -1,6 +1,8 @@
 import type { Request } from 'express'
 import multer, { type FileFilterCallback } from 'multer'
-import path from 'path'
+import path, { resolve } from 'path'
+import { ENVIRONMENT } from '@configs'
+import { FileFilterError } from '@errors'
 
 const storage = multer.diskStorage({
   destination(req, file, callback) {
@@ -14,16 +16,25 @@ const storage = multer.diskStorage({
 })
 
 const fileFilter = (req: Request, file: Express.Multer.File, callback: FileFilterCallback) => {
-  const allowImageExtensions = ['.docx', '.pdf']
   const fileExtension = path.extname(file.originalname)
-  if (!allowImageExtensions.includes(fileExtension)) {
-    // return callback(new FileFilterError('Image required', file.fieldname, allowImageExtensions))
+  if (!ENVIRONMENT.ALLOW_FILE_EXTENSIONS.includes(fileExtension)) {
+    return callback(new FileFilterError(''))
   }
   return callback(null, true)
 }
 
+const Multer = multer({
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: {
+    // fileSize: ENVIRONMENT.FILE_MAX_SIZE * 1024 * 1024,
+
+  }
+})
+
 const FileUpload = {
-  single: (fieldName: string) => multer({ storage: storage, fileFilter: fileFilter }).single(fieldName)
+  single: (fieldName: string) => Multer.single(fieldName),
+  multi: (fieldName: string) => Multer.array(fieldName, ENVIRONMENT.MAX_NUMBER_FILE_PER_REQUEST)
 }
 
 export default FileUpload
