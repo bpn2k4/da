@@ -12,10 +12,10 @@ import { routerV1 } from '@routers'
 const main = async () => {
   const app = express()
 
+  app.use(Logger())
   app.use(cors())
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
-  app.use(Logger())
   fs.mkdirSync('./data/databases', { recursive: true })
   fs.mkdirSync('./data/files', { recursive: true })
 
