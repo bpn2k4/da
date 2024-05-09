@@ -1,22 +1,38 @@
 console.clear()
-import express from 'express'
 import cors from 'cors'
-import { routerV1 } from '@routers'
-import { ErrorHandler, Logger } from '@middlewares'
+import express from 'express'
 import fs from 'fs'
+
 import { ENVIRONMENT } from '@configs'
+import { sql } from '@databases'
+import { ErrorHandler, Logger } from '@middlewares'
+import { initModel } from '@models'
+import { routerV1 } from '@routers'
 
 const main = async () => {
   const app = express()
-  console.log(ENVIRONMENT.FILE_MAX_SIZE * 1024 * 1024);
-  console.log(ENVIRONMENT.FILE_MAX_SIZE);
-
 
   app.use(cors())
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
   app.use(Logger())
+  fs.mkdirSync('./data/databases', { recursive: true })
   fs.mkdirSync('./data/files', { recursive: true })
+
+  await sql.authenticate()
+  await initModel()
+
+  app.get('/monitor/liveness', (req, res) => {
+    return res.status(200).send('Alive')
+  })
+  app.get('/monitor/readiness', async (req, res, next) => {
+    try {
+      await sql.query('SELECT 1+1 AS result')
+      return res.status(200).send('Ready')
+    } catch (error) {
+      next(error)
+    }
+  })
 
   app.get('/', (req, res) => {
     return res.status(200).send("<h1>Hello World</h1>")
@@ -26,9 +42,8 @@ const main = async () => {
 
   app.use(ErrorHandler)
 
-  const PORT = Bun.env.PORT ?? 4000
-  app.listen(PORT, () => {
-    console.log(`App is running at http://localhost:${PORT}`)
+  app.listen(ENVIRONMENT.PORT, () => {
+    console.log(`App is running at http://localhost:${ENVIRONMENT.PORT}`)
   })
 }
 

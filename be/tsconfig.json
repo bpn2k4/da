@@ -39,6 +39,9 @@
       "@middlewares": [
         "./src/middlewares/index.ts"
       ],
+      "@models": [
+        "./src/models/index.ts"
+      ],
       "@routers": [
         "./src/routers/index.ts"
       ],

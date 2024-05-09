@@ -1,4 +1,4 @@
-
+import crypto from 'crypto'
 
 const Utils = {
   getCurrentTime: () => {
@@ -9,10 +9,21 @@ const Utils = {
     const hours = String(date.getHours()).padStart(2, '0')
     const minutes = String(date.getMinutes()).padStart(2, '0')
     const seconds = String(date.getSeconds()).padStart(2, '0')
-    const miliseconds = String(date.getMilliseconds()).padEnd(4, '0')
-    const time = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}:${miliseconds}`
+    const milliseconds = String(date.getMilliseconds()).padEnd(4, '0')
+    const time = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}:${milliseconds}`
     return time
-  }
+  },
+  randomUUIDV4: crypto.randomUUID,
+  slugify: (str: string) =>
+    str.toLocaleLowerCase()
+      .replace(/đ/g, 'd')
+      .normalize('NFKD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9 -]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
 }
 
 export default Utils

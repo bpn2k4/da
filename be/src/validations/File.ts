@@ -1,25 +1,28 @@
 import Joi, { type ValidationError } from 'joi'
+import { ENVIRONMENT } from '@configs'
 
 const option = { abortEarly: false }
 
-const validateCreateFiles: ValidateCreateFiles = ({ body }) => {
+const validateCreateFile: ValidateCreateFile = ({ body }) => {
   const schema = Joi.object({
     filename: Joi.string().required(),
-    metadata: Joi.object().pattern(
-      Joi.string(),
-      Joi.string().required()
-    )
+    metadata: Joi.string(),
+    content: Joi.string(),
+    extension: Joi.string().valid(...ENVIRONMENT.ALLOW_FILE_EXTENSIONS).required()
   })
   return schema.validate(body, option)
 }
 
 const FileValidator = {
-  validateCreateFiles
+  validateCreateFile
 }
 
-type ValidateCreateFiles = (params: { body: any }) => ({
+type ValidateCreateFile = (params: { body: any }) => ({
   value: {
-
+    filename: string,
+    metadata?: string,
+    content: string,
+    extension: 'doc' | 'docx' | 'pdf' | 'txt'
   },
   error?: ValidationError
 })
