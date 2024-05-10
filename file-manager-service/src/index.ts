@@ -16,7 +16,6 @@ const main = async () => {
   app.use(cors())
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
-  fs.mkdirSync('./data/databases', { recursive: true })
   fs.mkdirSync('./data/files', { recursive: true })
 
   await sql.authenticate()

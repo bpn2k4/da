@@ -74,8 +74,24 @@ const updateFile = async ({ body: body_, params: params_ }: ServiceParams) => {
   return data
 }
 
-const deleteFile = async () => {
-
+const deleteFile = async ({ params: params_ }: ServiceParams) => {
+  const { params, error } = FileValidator.validateDeleteFile({ params: params_ })
+  if (error) {
+    throw new JoiValidationError(error)
+  }
+  const file = await File.findOne({
+    where: {
+      fileId: params?.fileId,
+      deleted: false
+    }
+  })
+  if (!file) {
+    throw new NotFoundError('')
+  }
+  await file.update({
+    deleted: true
+  })
+  return params
 }
 
 const deleteFiles = async () => {

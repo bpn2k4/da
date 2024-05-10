@@ -45,10 +45,19 @@ const validateGetFiles: ValidateGetFiles = ({ query }) => {
   return { query: queryValue, error: queryError }
 }
 
+const validateDeleteFile: ValidateDeleteFile = ({ params }) => {
+  const paramsSchema = Joi.object({
+    fileId: Joi.string().required()
+  })
+  const { value: paramsValue, error: paramsError } = paramsSchema.validate(params, option)
+  return { params: paramsValue, error: paramsError }
+}
+
 const FileValidator = {
   validateCreateFile,
   validateUpdateFile,
-  validateGetFiles
+  validateGetFiles,
+  validateDeleteFile
 }
 
 type ValidateCreateFile = (params: ValidationParams) => ({
@@ -74,6 +83,12 @@ type ValidateGetFiles = (params: ValidationParams) => ({
   query: {
     page: number,
     limit: number,
+  },
+  error?: ValidationError
+})
+type ValidateDeleteFile = (params: ValidationParams) => ({
+  params: {
+    fileId: string,
   },
   error?: ValidationError
 })

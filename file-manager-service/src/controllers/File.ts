@@ -29,8 +29,8 @@ const updateFile = async (req: Request, res: Response, next: NextFunction) => {
 }
 const deleteFile = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { body, file } = req
-    const data = await FileService.createFile({ body, file })
+    const { params } = req
+    const data = await FileService.deleteFile({ params })
     return res.status(STATUS_CODE.SUCCESS).json({
       status: STATUS_NAME.SUCCESS,
       ...data
