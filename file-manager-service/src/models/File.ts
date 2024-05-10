@@ -42,6 +42,12 @@ const File = sql.define('files', {
 }, {
   timestamps: true,
   tableName: 'files',
+  indexes: [
+    {
+      name: 'file_manager_service_deleted_index',
+      fields: ['deleted'],
+    }
+  ]
 })
 
 export default File

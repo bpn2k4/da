@@ -15,6 +15,14 @@ const ErrorHandler = (error: Error, req: Request, res: Response, next: NextFunct
           error: error.name,
           message: error.message
         })
+    case ERROR_NAME.NOT_FOUND_ERROR:
+      return res
+        .status(STATUS_CODE.NOT_FOUND)
+        .json({
+          status: STATUS_NAME.FAIL,
+          error: error.name,
+          message: error.message
+        })
   }
 
   return res.status(STATUS_CODE.INTERNAL_SERVER_ERROR).json({

@@ -20,6 +20,7 @@ const main = async () => {
   fs.mkdirSync('./data/files', { recursive: true })
 
   await sql.authenticate()
+  console.log('Connect to database successfully!')
   await initModel()
 
   app.get('/monitor/liveness', (req, res) => {
