@@ -20,11 +20,17 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
+      "@apis": [
+        "./src/apis/index.ts"
+      ],
       "@assets/*": [
         "./src/assets/*"
       ],
       "@components/*": [
         "./src/components/*"
+      ],
+      "@configs": [
+        "./src/configs/index.ts"
       ],
       "@hooks": [
         "./src/hooks/index.ts"

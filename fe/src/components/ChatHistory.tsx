@@ -1,5 +1,7 @@
-import { useState } from "react"
-import { twMerge } from "@hooks"
+import { useEffect, useRef, useState } from 'react'
+import { twMerge, useDispatch, useSelector } from '@hooks'
+import { IconMoon, IconSun } from './Icon'
+import { setTheme } from '@slices/System'
 
 const ChatHistory = () => {
 
@@ -7,7 +9,7 @@ const ChatHistory = () => {
 
   return (
     <div className={twMerge(
-      "w-[260px] h-full overflow-hidden transition-all relative",
+      "w-[260px] h-full overflow-hidden transition-all relative bg-rgb-250 dark:bg-rgb-15",
       !show && "w-0"
     )}>
       <ChatHistoryBody />
@@ -23,7 +25,7 @@ const ChatHistoryBody = () => {
   return (
     <div className="h-full flex flex-col">
       <div className="w-full px-2 h-14 center">
-        <button className="w-full h-9 px-2 flex flex-row items-center justify-between py-1 rounded dark:hover:bg-rgb-35">
+        <button className="w-full h-9 px-2 flex flex-row items-center justify-between py-1 rounded hover:bg-rgb-235 dark:hover:bg-rgb-35">
           <div className="flex flex-row items-center">
             <div className="w-7 h-7 center rounded-full border-2 mr-1 dark:border-rgb-75">
               <Icon />
@@ -47,7 +49,7 @@ const ChatHistoryList = () => {
       {items.map((_, index) => (
         <button
           key={index}
-          className="w-full h-9 px-2 flex flex-row items-center py-1 rounded dark:hover:bg-rgb-35">
+          className="w-full h-9 px-2 flex flex-row items-center py-1 rounded hover:bg-rgb-235 dark:hover:bg-rgb-35">
           <span className="line-clamp-1">
             {`Item ${index + 1}`}
           </span>
@@ -59,11 +61,78 @@ const ChatHistoryList = () => {
 
 const ChatHistoryAction = () => {
 
-  return (
-    <div>
-      <button>
+  const dispatch = useDispatch()
+  const { theme } = useSelector(state => state.system)
 
-      </button>
+  const [show, setShow] = useState(true)
+
+  const buttonRef = useRef<any>()
+  const menuRef = useRef<any>()
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (!menuRef.current.contains(e.target) && !buttonRef.current.contains(e.target)) {
+        setShow(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const handleChangeTheme = () => {
+    if (theme == 'light') {
+      dispatch(setTheme('dark'))
+    }
+    else {
+      dispatch(setTheme('light'))
+    }
+  }
+
+  return (
+    <div className="py-2">
+      <div className="w-full h-12 flex flex-row items-center px-2 relative">
+        <button
+          className="w-full py-1 flex flex-row items-center rounded hover:bg-rgb-235 dark:hover:bg-rgb-35 px-2"
+          onClick={() => setShow(!show)}
+          ref={buttonRef}>
+          <img
+            className="w-8 h-8 rounded-full border mr-2"
+            src="https://cdn.pixabay.com/photo/2023/05/23/19/00/marguerite-8013280_640.jpg" />
+          <span className="text-sm">user name</span>
+        </button>
+        <div className={twMerge(
+          "absolute left-2 right-2 py-1 bg-rgb-255 dark:bg-rgb-0 bottom-[calc(100%+4px)] shadow-primary rounded origin-bottom transition-all text-sm",
+          show ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0"
+        )}
+          ref={menuRef}>
+          <button
+            className="w-full h-10 hover:bg-rgb-235 dark:hover:bg-rgb-35 flex flex-row items-center px-2 justify-between"
+            onClick={handleChangeTheme}>
+            <span>Theme</span>
+            <div
+              className={twMerge(
+                'w-10 h-10 rounded-full relative overflow-hidden transition-all bg-transparent',
+              )}
+              title='Change theme'>
+              <div className={twMerge(
+                'absolute rounded-full offset-0 center transition-transform duration-300 text-black dark:text-white',
+                theme == 'dark' ? 'opacity-0 rotate-45' : 'opacity-100 rotate-0'
+              )}>
+                <IconSun />
+              </div>
+              <div className={twMerge(
+                'absolute rounded-full offset-0 center transition-transform duration-300 text-black dark:text-white',
+                theme == 'dark' ? 'opacity-100 rotate-0' : 'opacity-0 -rotate-45'
+              )}>
+                <IconMoon />
+              </div>
+            </div>
+          </button>
+
+          <button className="w-full h-10 hover:bg-rgb-235 dark:hover:bg-rgb-35 flex flex-row px-2 items-center">Logout</button>
+        </div>
+      </div>
+
     </div>
   )
 }

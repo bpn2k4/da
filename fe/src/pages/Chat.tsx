@@ -1,7 +1,6 @@
 import ChatInput from "@components/ChatInput"
 import MessageList from "@components/MessageList"
 
-
 const Chat = () => {
 
   return (

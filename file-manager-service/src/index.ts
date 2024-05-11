@@ -8,6 +8,7 @@ import { sql } from '@databases'
 import { ErrorHandler, Logger } from '@middlewares'
 import { initModel } from '@models'
 import { routerV1 } from '@routers'
+import { resolve } from 'path'
 
 const main = async () => {
   const app = express()
@@ -22,6 +23,9 @@ const main = async () => {
   console.log('Connect to database successfully!')
   await initModel()
 
+  app.get('/favicon.ico', (req, res) => {
+    return res.status(200).sendFile(resolve('./logo.webp'))
+  })
   app.get('/monitor/liveness', (req, res) => {
     return res.status(200).send('Alive')
   })

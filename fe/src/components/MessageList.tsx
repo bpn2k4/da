@@ -30,6 +30,7 @@ const MessageList = () => {
       <div className="w-full max-w-[800px] mx-auto">
         {items.map((item, index) => (
           <ItemMessage
+            key={index}
             role={index % 2 == 0 ? 'bot' : 'user'}
             content={item} />
         ))}

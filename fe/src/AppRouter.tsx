@@ -4,6 +4,9 @@ import Chat from "@pages/Chat"
 import AdminLayout from "@layouts/AdminLayout"
 import Document from "@pages/Document"
 import ChatLayout from "@layouts/ChatLayout"
+import FileManager from "@pages/FileManager"
+import DocumentManager from "@pages/DocumentManager"
+import ChunkManager from "@pages/ChunkManager"
 
 const routes = [
   {
@@ -19,6 +22,38 @@ const routes = [
     element: (
       <AdminLayout>
         <Document />
+      </AdminLayout>
+    )
+  },
+  {
+    path: '/admin/content',
+    element: (
+      <AdminLayout>
+        <DocumentManager />
+      </AdminLayout>
+    )
+  },
+  {
+    path: '/admin/content/document',
+    element: (
+      <AdminLayout>
+        <DocumentManager />
+      </AdminLayout>
+    )
+  },
+  {
+    path: '/admin/content/chunk',
+    element: (
+      <AdminLayout>
+        <ChunkManager />
+      </AdminLayout>
+    )
+  },
+  {
+    path: '/admin/content/file',
+    element: (
+      <AdminLayout>
+        <FileManager />
       </AdminLayout>
     )
   },

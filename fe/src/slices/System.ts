@@ -19,14 +19,14 @@ const initTheme = () => {
 
 type SystemState = {
   theme: 'light' | 'dark',
-  windowWidth: Number | null,
-  windowHeight: Number | null,
+  windowWidth: number | null,
+  windowHeight: number | null,
 }
 
 const initialState: SystemState = {
   theme: initTheme(),
   windowHeight: null,
-  windowWidth: null
+  windowWidth: null,
 }
 
 const systemSlice = createSlice({
@@ -34,7 +34,7 @@ const systemSlice = createSlice({
   initialState: initialState,
   reducers: {
     setTheme: (state, { payload }) => {
-      state.theme == payload
+      state.theme = payload
       if (payload == 'light') {
         document.documentElement.classList.remove('dark')
         localStorage.setItem('theme', 'light')

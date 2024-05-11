@@ -1,63 +1,56 @@
-import logoBKA from '@assets/images/logo-bka.png'
-import { Link, useLocation } from 'react-router-dom'
 import { twMerge } from 'tailwind-merge'
+import { IconMoon, IconSun } from './Icon'
+import { useDispatch, useSelector } from '@hooks'
+import { setTheme } from '@slices/System'
 
 const AdminHeader = () => {
 
-  const { pathname } = useLocation()
-
-  const navItems = [
-    { title: 'Content', path: '/admin/1' },
-    { title: 'Manager', path: '/admin/2' },
-    { title: 'Analytic', path: '/admin/3' },
-  ]
-
-  console.log(pathname);
-
-
   return (
-    <header className="w-full h-12 flex flex-row items-center justify-between text-sm px-3">
-      <div className='flex flex-row'>
-        <Link to="/admin" className="center">
-          <img
-            className="h-10"
-            src={logoBKA} />
-        </Link>
-        <div className='flex flex-row font-[500] relative ml-4'>
-          {navItems.map(({ path, title }, index) => (
-            <Link
-              key={index}
-              to={path}
-              className={twMerge(
-                "h-12 w-32 center hover:text-bka hover:opacity-90",
-                pathname == path && "text-bka"
-              )}>
-              <span>
-                {title.toUpperCase()}
-              </span>
-            </Link>
-          ))}
-          <Indicator />
-        </div>
+    <header className="w-full h-12 flex flex-row items-center justify-between text-sm px-3 text-[#4A5677] dark:text-[#4A5677]">
+      <div className='flex flex-row ml-3 h-12 items-center'>
+
+      </div>
+      <div>
+        <ToggleTheme />
       </div>
     </header>
   )
 }
 
-const Indicator = () => {
+const ToggleTheme = () => {
+  const dispatch = useDispatch()
+  const { theme } = useSelector(state => state.system)
+  const isDark = theme == 'dark'
 
-  const { pathname } = useLocation()
-
+  const handleChangeTheme = () => {
+    if (theme == 'light') {
+      dispatch(setTheme('dark'))
+    }
+    else {
+      dispatch(setTheme('light'))
+    }
+  }
   return (
-    <div className={twMerge(
-      "absolute bottom-0 left-0 h-[2px] center w-32 translate-x-0 transition-all",
-      pathname == "/admin/2" && "translate-x-[100%]",
-      pathname == "/admin/3" && "translate-x-[200%]",
-    )}>
-      <div className="h-[2px] w-24 bg-bka">
-
+    <button
+      className={twMerge(
+        'w-10 h-10 rounded-full relative overflow-hidden transition-all bg-transparent',
+        'hover:bg-rgb-195 active:bg-rgb-195',
+      )}
+      title='Change theme'
+      onClick={handleChangeTheme}>
+      <div className={twMerge(
+        'absolute rounded-full offset-0 center transition-transform duration-300 text-black dark:text-white',
+        isDark ? 'opacity-0 rotate-45' : 'opacity-100 rotate-0'
+      )}>
+        <IconSun />
       </div>
-    </div>
+      <div className={twMerge(
+        'absolute rounded-full offset-0 center transition-transform duration-300 text-black dark:text-white',
+        isDark ? 'opacity-100 rotate-0' : 'opacity-0 -rotate-45'
+      )}>
+        <IconMoon />
+      </div>
+    </button>
   )
 }
 
