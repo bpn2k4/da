@@ -80,9 +80,8 @@ const AppRouter = (props: AppRouterProps) => {
             path={path}
             element={element} />
         ))}
-        {children}
-
       </Routes>
+      {children}
     </BrowserRouter>
   )
 }

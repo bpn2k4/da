@@ -10,13 +10,12 @@ const AdminLayout = (props: AdminLayoutProps) => {
         <div className="w-[240px] h-dvh bg-red-500">
           <SideBar />
         </div>
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col relative">
           <AdminHeader />
-          <div className="flex-1 overflow-auto">
+          <div className="absolute top-12 left-0 right-0 bottom-0">
             {children}
           </div>
         </div>
-
       </div>
     </Container>
   )

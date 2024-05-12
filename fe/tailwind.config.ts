@@ -21,6 +21,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      scale: {
+        98: '0.98',
+        99: '0.99',
+      },
       colors: {
         rgb: {
           0: 'rgb(0,0,0)',
@@ -41,6 +45,10 @@ const config: Config = {
           255: 'rgb(255,255,255)',
         },
         bka: 'rgb(207,14,35)'
+      },
+      spacing: {
+        13: '3.25rem',
+        15: '3.75rem',
       }
     },
   },
