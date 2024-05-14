@@ -35,7 +35,8 @@ const createFile = async ({ body: body_, file }: ServiceParams) => {
     throw new ValidationError('"extension" must be txt when use field "content"')
   }
   const fileExtension = 'txt'
-  const filename = Utils.randomUUIDV4() + '.' + fileExtension
+  const originName = Utils.slugify(body.filename)
+  const filename = Utils.randomUUIDV4() + '-' + originName + '.' + fileExtension
   const filePath = ENVIRONMENT.FILE_DESTINATION + '/' + filename
   await Bun.write(filePath, body.content)
   const stat = await fs.stat(filePath)
@@ -43,12 +44,14 @@ const createFile = async ({ body: body_, file }: ServiceParams) => {
     ...body,
     size: stat.size,
     path: filePath.replace(/\\/g, '/'),
-    originName: filename
+    originName: originName + '.' + fileExtension
   })
   const data = await newFile.toJSON()
   data.link = ENVIRONMENT.HOST + '/' + data.path.slice(5)
   delete data.path
-  return data
+  return {
+    file: data
+  }
 }
 
 const updateFile = async ({ body: body_, params: params_ }: ServiceParams) => {
@@ -71,7 +74,9 @@ const updateFile = async ({ body: body_, params: params_ }: ServiceParams) => {
   const data = await newFile.toJSON()
   data.link = ENVIRONMENT.HOST + '/' + data.path.slice(5)
   delete data.path
-  return data
+  return {
+    file: data
+  }
 }
 
 const deleteFile = async ({ params: params_ }: ServiceParams) => {
@@ -91,7 +96,7 @@ const deleteFile = async ({ params: params_ }: ServiceParams) => {
   await file.update({
     deleted: true
   })
-  return params
+  return { params }
 }
 
 const deleteFiles = async () => {

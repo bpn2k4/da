@@ -1,5 +1,6 @@
 import Document from './Document'
 import File from './File'
+import Chunk from './Chunk'
 import { sql } from '@databases'
 
 const createAssociation = () => {
@@ -10,6 +11,14 @@ const createAssociation = () => {
   File.hasMany(Document, {
     foreignKey: 'fileId',
     as: 'documents'
+  })
+  Chunk.belongsTo(Document, {
+    foreignKey: 'documentId',
+    as: 'document'
+  })
+  Document.hasMany(Chunk, {
+    foreignKey: 'documentId',
+    as: 'chunks'
   })
 }
 

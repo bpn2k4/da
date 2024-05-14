@@ -1,3 +1,4 @@
+import DocumentApi from './Document'
 import FileApi from './File'
 
 const Api = {
@@ -5,7 +6,8 @@ const Api = {
     SUCCESS: 'success',
     FAIL: 'fail',
   },
-  FileApi
+  FileApi,
+  DocumentApi
 }
 
 export default Api

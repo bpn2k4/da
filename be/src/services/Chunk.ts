@@ -30,7 +30,7 @@ const createDocument = async ({ body: body_ }: ServiceParams) => {
   data.file = file
   data.file.link = ENVIRONMENT.HOST + '/' + data.file.path.slice(5)
   delete data.file.path
-  return { document: data }
+  return data
 }
 
 const updateFile = async ({ body: body_, params: params_ }: ServiceParams) => {
@@ -54,7 +54,7 @@ const updateFile = async ({ body: body_, params: params_ }: ServiceParams) => {
 
   data.link = ENVIRONMENT.HOST + '/' + data.path.slice(5)
   delete data.path
-  return { data }
+  return data
 }
 
 const deleteFile = async ({ params: params_ }: ServiceParams) => {
@@ -95,7 +95,7 @@ const getDocument = async ({ params: params_ }: ServiceParams) => {
       { model: File, as: 'file' }
     ]
   })
-  return { document }
+  return document
 }
 const getDocuments = async ({ query: query_ }: ServiceParams) => {
   const { query, error } = DocumentValidator.validateGetDocuments({ query: query_ })

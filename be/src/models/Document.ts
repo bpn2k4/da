@@ -1,6 +1,6 @@
 import { sql } from '@databases'
 import { BOOLEAN, INTEGER, STRING, TEXT, UUID, UUIDV4 } from 'sequelize'
-import { DOCUMENT_STATUS } from '@configs'
+import { DOCUMENT_CHUNKING_METHOD, DOCUMENT_STATUS } from '@configs'
 
 
 const Document = sql.define('document', {
@@ -23,10 +23,15 @@ const Document = sql.define('document', {
     allowNull: false,
     defaultValue: 0
   },
+  chunkMethod: {
+    type: STRING,
+    allowNull: false,
+    defaultValue: DOCUMENT_CHUNKING_METHOD.STRUCT
+  },
   status: {
     type: STRING,
     allowNull: false,
-    defaultValue: DOCUMENT_STATUS.PROCESSING
+    defaultValue: DOCUMENT_STATUS.CREATED
   },
   note: {
     type: TEXT,
@@ -42,10 +47,6 @@ const Document = sql.define('document', {
   timestamps: true,
   tableName: 'documents',
   indexes: [
-    {
-      name: 'document_deleted_index',
-      fields: ['deleted'],
-    },
     {
       name: 'document_status_index',
       fields: ['status'],

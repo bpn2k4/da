@@ -13,5 +13,6 @@ router.delete('/files/:fileId', FileController.deleteFile)
 
 router.post('/documents', DocumentController.createDocument)
 router.get('/documents', DocumentController.getDocuments)
+router.get('/documents/:documentId', DocumentController.getDocument)
 
 export default router
