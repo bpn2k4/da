@@ -5,7 +5,7 @@ import Select from "./Select"
 
 const Table = (props: TableProps) => {
 
-  const { className, cx, minWidth, columns, header, columnsMinWidth, body } = props
+  const { className, cx, minWidth, columns, header, body, baseWidth = 60 } = props
 
   return (
     <div className={twMerge(
@@ -14,7 +14,7 @@ const Table = (props: TableProps) => {
     )}>
       <div className="w-full" style={{ minWidth: minWidth ?? 600 }}>
         <div className={twMerge(
-          "flex flex-row h-13 text-[#9EA5BD] font-semibold border-b",
+          "flex flex-row text-[#9EA5BD] font-semibold border-b",
           cx?.header
         )}>
           {header?.map((item, index) => (
@@ -23,7 +23,7 @@ const Table = (props: TableProps) => {
               className=""
               style={{
                 width: columns ? `${columns[index]}%` : undefined,
-                minWidth: columnsMinWidth ? columnsMinWidth[index] : undefined
+                minWidth: columns ? (columns[index] / 10) * baseWidth : undefined
               }}>
               {item}
             </div>
@@ -49,7 +49,7 @@ const Table = (props: TableProps) => {
                   )}
                   style={{
                     width: columns ? `${columns[index]}%` : undefined,
-                    minWidth: columnsMinWidth ? columnsMinWidth[index] : undefined
+                    minWidth: columns ? (columns[index] / 10) * baseWidth : undefined
                   }}>
                   {item}
                 </div>
@@ -65,7 +65,7 @@ const Table = (props: TableProps) => {
 export type TableProps = {
   className?: string,
   columns?: number[],
-  columnsMinWidth?: number[],
+  baseWidth?: number
   minWidth?: number,
   header?: React.ReactNode[],
   body?: Array<React.ReactNode[]>,

@@ -19,8 +19,7 @@ const Select = (props: SelectProps) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-
-  }, [menuRef])
+  }, [])
 
   const _onSelect = onSelect ?? (_ => { })
 
@@ -91,7 +90,7 @@ const CheckBox = (props: CheckBoxProps) => {
   return (
     <button
       className={twMerge("flex flex-row text-xs items-center gap-2 text-[#4A5677]", className)} onClick={onClick}>
-      <div className="w-4 h-4 rounded-full center overflow-hidden bg-[#dbe3ef]">
+      <div className="w-4 h-4 rounded center overflow-hidden bg-[#dbe3ef]">
         <Check
           className={twMerge("transition-all origin-center", checked ? 'scale-100' : 'scale-0')} />
       </div>

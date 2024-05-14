@@ -40,6 +40,7 @@ const validateGetFiles: ValidateGetFiles = ({ query }) => {
   const schema = Joi.object({
     page: Joi.number().min(0).default(0),
     limit: Joi.number().min(1).max(100).default(20),
+    q: Joi.string()
   })
   const { value: queryValue, error: queryError } = schema.validate(query, option)
   return { query: queryValue, error: queryError }
@@ -83,6 +84,7 @@ type ValidateGetFiles = (params: ValidationParams) => ({
   query: {
     page: number,
     limit: number,
+    q?: string
   },
   error?: ValidationError
 })

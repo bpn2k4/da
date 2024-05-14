@@ -2,6 +2,7 @@ import { useEffect, useId, useState } from "react"
 import Modal from "./Modal"
 import { twMerge } from "tailwind-merge"
 import Utils from "@utils"
+import { File } from "@types"
 
 type FileModalConfig = {
   type: 'create' | 'view',
@@ -11,7 +12,9 @@ type FileModalConfig = {
   content: string,
   file?: any,
   fileName?: string,
-  onClickSave?: any
+  onClickSave?: any,
+  file_?: File,
+  fileUrl?: string
 }
 
 const defaultFileModalConfig: FileModalConfig = {
@@ -21,7 +24,7 @@ const defaultFileModalConfig: FileModalConfig = {
   fileType: 'raw',
   content: '',
   file: null,
-  fileName: undefined
+  fileName: undefined,
 }
 
 const FileModal = () => {
@@ -34,10 +37,15 @@ const FileModal = () => {
   Utils.FileModal = {
     isShow: show,
     show: (config) => {
-      setConfig({
+      const newConfig = {
         ...defaultFileModalConfig,
         ...config
-      })
+      }
+      newConfig.name = config?.file_?.filename ?? newConfig.name
+      newConfig.fileName = config?.file_?.originName ?? newConfig.fileName
+      newConfig.fileType = config?.file_?.extension ?? newConfig.fileType
+      newConfig.size = config?.file_?.size ?? newConfig.size
+      setConfig(newConfig)
       setShow(true)
     },
     hide: () => {
@@ -59,7 +67,12 @@ const FileModal = () => {
 
     }
     else {
-      setConfig({ ...defaultFileModalConfig })
+      const timer = setTimeout(() => {
+        setConfig({ ...defaultFileModalConfig })
+      }, 400)
+      return () => {
+        clearTimeout(timer)
+      }
     }
   }, [show])
 
@@ -74,7 +87,7 @@ const FileModal = () => {
         <div className="bg-[#F6F7FB] overflow-y-auto px-4 py-4">
           <div className="w-full text-xs">
             <div className="text-[#9EA5BD] mb-1">Name</div>
-            <div className="h-9 w-full rounded-md border border-[#DBE3EF] overflow-hidden">
+            <div className="h-9 w-full rounded-md border border-[#DBE3EF] overflow-hidden bg-rgb-255">
               <input
                 className="w-full h-full outline-none px-2"
                 value={config.name}
@@ -88,7 +101,11 @@ const FileModal = () => {
             <div className="text-[#9EA5BD] mb-1">File</div>
             <div className="flex flex-row items-center">
               {config.fileName && (
-                <div className="mr-3">{config.fileName}</div>
+                <div className="mr-3 hover:text-[#5180FB] hover:underline">
+                  <a href={config.file_?.link ?? config.fileUrl} target="_blank">
+                    {config.fileName}
+                  </a>
+                </div>
               )}
               <input
                 id={fileInputId}
@@ -105,6 +122,7 @@ const FileModal = () => {
                     if (config.name == '') {
                       config.name = file.name.split('.').slice(0, -1).join('.')
                     }
+                    config.fileUrl = URL.createObjectURL(file)
                     e.target.files = null
                     setConfig({ ...config })
                   }
@@ -179,26 +197,31 @@ const FileModal = () => {
                 if (!config.onClickSave) {
                   return
                 }
-                if (!config.name) {
-                  return
-                }
-                const formData = new FormData()
-                formData.append('filename', config.name)
-                if (config.fileType == 'raw') {
-                  if (!config.content) {
+                if (config.type == 'create') {
+                  if (!config.name) {
                     return
                   }
-                  formData.append('extension', 'txt')
-                  formData.append('content', config.content)
+                  const formData = new FormData()
+                  formData.append('filename', config.name)
+                  if (config.fileType == 'raw') {
+                    if (!config.content) {
+                      return
+                    }
+                    formData.append('extension', 'txt')
+                    formData.append('content', config.content)
+                  }
+                  else {
+                    if (!config.file) {
+                      return
+                    }
+                    formData.append('extension', config.fileType)
+                    formData.append('file', config.file)
+                  }
+                  config.onClickSave(formData)
                 }
                 else {
-                  if (!config.file) {
-                    return
-                  }
-                  formData.append('extension', config.fileType)
-                  formData.append('file', config.file)
+                  config.onClickSave()
                 }
-                config.onClickSave(formData)
               }}>
               Save
             </button>

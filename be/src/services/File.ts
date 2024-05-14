@@ -6,6 +6,7 @@ import { File } from '@models'
 import Utils from '@utils'
 import { FileValidator } from '@validations'
 import { sql } from '@databases'
+import { Op, type WhereOptions } from 'sequelize'
 
 
 const createFile = async ({ body: body_, file }: ServiceParams) => {
@@ -111,10 +112,21 @@ const getFiles = async ({ query: query_ }: ServiceParams) => {
   if (error) {
     throw new JoiValidationError(error)
   }
+  let where: WhereOptions = {}
+  if (typeof (query.q) != 'undefined') {
+    where = {
+      deleted: false,
+      [Op.or]: [
+        { filename: { [Op.like]: `%${query.q}%` } },
+        { originName: { [Op.like]: `%${query.q}%` } }
+      ]
+    }
+  }
+  else {
+    where = { deleted: false }
+  }
   const { rows: files, count } = await File.findAndCountAll({
-    where: {
-      deleted: false
-    },
+    where: where,
     limit: query.limit,
     offset: query.limit * query.page
   })

@@ -51,7 +51,12 @@ const File = sql.define('files', {
       name: 'file_filename_index',
       fields: ['filename'],
       type: 'FULLTEXT',
-    }
+    },
+    {
+      name: 'file_originName_index',
+      fields: ['originName'],
+      type: 'FULLTEXT',
+    },
   ]
 })
 

@@ -2,13 +2,14 @@ export type File = {
   fileId: string,
   filename: string,
   originName: string,
-  extension: string,
+  extension: 'pdf' | 'doc' | 'docx' | 'txt' | 'raw',
   size: number,
   deleted: string,
   metadata: string,
   link: string,
   createdAt: string,
   updatedAt: string,
+  checked: boolean,
 }
 
 export type Document = {
@@ -23,6 +24,7 @@ export type Document = {
   deleted: string,
   createdAt: string,
   updatedAt: string,
+  checked: boolean,
 }
 
 export type Chunk = {
@@ -36,4 +38,5 @@ export type Chunk = {
   end: boolean,
   createdAt: string,
   updatedAt: string,
+  checked: boolean,
 }

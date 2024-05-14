@@ -1,3 +1,4 @@
+import DocumentModal from "./DocumentModal"
 import FileModal from "./FileModal"
 import ModalConfirm from "./ModalConfirm"
 
@@ -8,6 +9,7 @@ const GlobalComponent = () => {
     <>
       <FileModal />
       <ModalConfirm />
+      <DocumentModal />
     </>
   )
 }

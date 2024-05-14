@@ -33,6 +33,9 @@ const DocumentSlice = createSlice({
     setTotal: (state, { payload }) => {
       state.total = payload
     },
+    setDocuments: (state, { payload }) => {
+      state.documents = payload
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(thunkGetDocuments.fulfilled, (state, { payload }) => {
@@ -45,5 +48,5 @@ const DocumentSlice = createSlice({
 })
 
 export const documentReducer = DocumentSlice.reducer
-export const { setLimit, setPage, setTotal } = DocumentSlice.actions
+export const { setLimit, setPage, setTotal, setDocuments } = DocumentSlice.actions
 export { thunkGetDocuments }

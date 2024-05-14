@@ -35,8 +35,8 @@ const FileTable = () => {
         onClickButtonAdd={onClickButtonAdd} />
       <Table
         minWidth={600}
-        columns={[10, 20, 30, 5, 10, 15, 10]}
-        columnsMinWidth={[120, 240, 360, 60, 120, 180, 120]}
+        columns={[10, 20, 25, 10, 10, 15, 10]}
+        baseWidth={60}
         header={[
           <div className="px-6 py-3">ID</div>,
           <div className="px-6 py-3">NAME</div>,
@@ -54,7 +54,16 @@ const FileTable = () => {
           <div className="px-6 py-3 ">{Utils.bytesToDisplayString(file.size)}</div>,
           <div className="px-6 py-3">{Utils.formatDate(file.createdAt)}</div>,
           <div className="px-6 py-3 flex flex-row gap-2">
-            <button>
+            <button
+              onClick={() => {
+                Utils.FileModal.show({
+                  file_: file,
+                  type: 'view',
+                  onClickSave: () => {
+                    Utils.FileModal.hide()
+                  }
+                })
+              }}>
               <IconManager className="hover:fill-[#40A4EC]" />
             </button>
             <button

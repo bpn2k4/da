@@ -24,10 +24,10 @@ const createAssociation = () => {
 
 const initModel = async (alter = true, force = false) => {
   createAssociation()
-  return sql.sync({
-    alter: alter,
-    force: force
-  })
+  // return sql.sync({
+  //   alter: alter,
+  //   force: force
+  // })
 }
 
 export {

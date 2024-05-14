@@ -1,3 +1,4 @@
+import { Document, File } from "@types"
 
 
 const Utils = {
@@ -29,6 +30,11 @@ const Utils = {
     show: (_: ShowFileModalConfig = {}) => { return },
     hide: (_: any = null) => { return }
   },
+  DocumentModal: {
+    isShow: false,
+    show: (_: ShowDocumentModalConfig = {}) => { return },
+    hide: (_: any = null) => { return }
+  },
   bytesToDisplayString: (bytes: number) => {
     if (bytes == 0) return '0B'
     const units = ['B', 'KB', 'MB', 'GB', 'TB']
@@ -43,7 +49,13 @@ const Utils = {
 
 type ShowFileModalConfig = {
   type?: 'create' | 'view',
-  onClickSave?: any
+  onClickSave?: any,
+  file_?: File
+}
+type ShowDocumentModalConfig = {
+  type?: 'create' | 'view',
+  onClickSave?: (props: { name: string, fileId: string }) => void,
+  document?: Document
 }
 
 type ShowModalConfirmConfig = {

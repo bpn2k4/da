@@ -33,6 +33,9 @@ const FileSlice = createSlice({
     setTotal: (state, { payload }) => {
       state.total = payload
     },
+    setFiles: (state, { payload }) => {
+      state.files = payload
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(thunkGetFiles.fulfilled, (state, { payload }) => {
@@ -45,5 +48,5 @@ const FileSlice = createSlice({
 })
 
 export const fileReducer = FileSlice.reducer
-export const { setLimit, setPage, setTotal } = FileSlice.actions
+export const { setLimit, setPage, setTotal, setFiles } = FileSlice.actions
 export { thunkGetFiles }
