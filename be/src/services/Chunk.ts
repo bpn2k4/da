@@ -97,7 +97,32 @@ const getDocument = async ({ params: params_ }: ServiceParams) => {
   })
   return document
 }
+
 const getDocuments = async ({ query: query_ }: ServiceParams) => {
+  const { query, error } = DocumentValidator.validateGetDocuments({ query: query_ })
+  if (error) {
+    throw new JoiValidationError(error)
+  }
+  const { rows: documents, count } = await Document.findAndCountAll({
+    where: {
+      deleted: false
+    },
+    include: [
+      { model: File, as: 'file' }
+    ],
+    limit: query.limit,
+    offset: query.limit * query.page
+  })
+  documents.forEach(item => {
+    item.dataValues.file.dataValues.link = ENVIRONMENT.HOST + '/' + item.dataValues.file.dataValues.path.slice(5)
+    delete item.dataValues.file.dataValues.path
+  })
+  return {
+    total: count,
+    documents,
+  }
+}
+const getChunks = async ({ query: query_ }: ServiceParams) => {
   const { query, error } = DocumentValidator.validateGetDocuments({ query: query_ })
   if (error) {
     throw new JoiValidationError(error)

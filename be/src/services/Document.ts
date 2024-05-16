@@ -95,7 +95,13 @@ const getDocument = async ({ params: params_ }: ServiceParams) => {
       { model: File, as: 'file' }
     ]
   })
-  return { document }
+  if (!document) {
+    throw new NotFoundError('')
+  }
+  document.dataValues.file.dataValues.link = ENVIRONMENT.HOST + '/' + document.dataValues.file.dataValues.path.slice(5)
+  delete document.dataValues.file.dataValues.path
+  const data = await document.toJSON()
+  return { document: data }
 }
 const getDocuments = async ({ query: query_ }: ServiceParams) => {
   const { query, error } = DocumentValidator.validateGetDocuments({ query: query_ })
@@ -120,6 +126,18 @@ const getDocuments = async ({ query: query_ }: ServiceParams) => {
     total: count,
     documents,
   }
+}
+
+const getChunksInDocument = async ({ query: query_ }: ServiceParams) => {
+
+}
+
+const chunkDocument = async ({ params: params_ }: ServiceParams) => {
+
+}
+
+const syncDocument = async () => {
+
 }
 
 

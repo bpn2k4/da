@@ -9,8 +9,8 @@ from docx.text.paragraph import Paragraph
 from docx.table import Table
 from pathlib import Path
 from typing import Any, List, Optional, Union
-from tqdm import tqdm
 import json
+import roman
 
 
 TITLE_COMMA_SPLIT = "#|#"
@@ -90,21 +90,16 @@ class StructExtract:
 
     self.document = Document(path)
     self.main()
-    print(self.page_number)
 
   def main(self):
     self.set_up_font_size()
     self.parse_document()
 
-    f = open('data.xml', 'a+', encoding='utf-8')
-
-    for element in tqdm(self.elements, desc="Splitting elements"):
+    for element in self.elements:
+      print(self.title)
       if (isinstance(element, Paragraph)):
-        for i in element.runs:
-          f.write(i._element.xml + '\n')
         self.update_page_number(element)
       self.split_element_content(element)
-    f.close()
 
     if self.head_on_work and self.head_on_work not in self.headings:
       self.headings.append(self.head_on_work)
@@ -209,7 +204,7 @@ class StructExtract:
           'title': chunk['title'],
           'text': chunk['text'],
           'index': len(self.chunks),
-          'page': chunk['page_number'],
+          'page': chunk.get('page_number', 1),
           'end': end_of_chunk
       })
       self.chunks[-1]['end'] = True
@@ -613,7 +608,7 @@ class StructExtract:
     while i < max_lvl:
       lvl_str = i.__str__()
       if lvl_str not in self.list_marks[_id]:
-        next_value = self._get_default_mark_value(_id, lvl_str)
+        next_value = self.get_default_mark_value(_id, lvl_str)
       else:
         next_value = self.list_marks[_id][lvl_str]
 
@@ -624,8 +619,8 @@ class StructExtract:
         return ListParagraphInfo(
             li_id=_id, li_level=lvl, li_value=next_value, li_type=last_type
         )
-      last_format = self._get_list_item_format(_id, lvl_str)
-      v, suffix = self._get_value_by_type(last_type, last_format, next_value)
+      last_format = self.get_list_item_format(_id, lvl_str)
+      v, suffix = self.get_value_by_type(last_type, last_format, next_value)
       full_value.append(v)
       i += 1
     if last_type == "bullet":
@@ -649,6 +644,53 @@ class StructExtract:
     return ListParagraphInfo(
         li_id=_id, li_level=lvl, li_value=value, li_type=last_type
     )
+
+  def get_mark_prefix(self, text):
+    if not text:
+      return ""
+
+    parts = text.split("%")
+    return parts[0]
+
+  def is_list_item_alone(self, text):
+    return len(re.findall(r"[\%0-9]{2}", text)) == 1
+
+  def get_default_mark_value(self, _id, lvl):
+    li_value = self.get_node_object(
+        self.numeric_styles, [_id, lvl, "w:start", "@w:val"])
+    try:
+      li_value = int(li_value)
+    except:
+      li_value = 1
+
+    return li_value
+
+  def get_value_by_type(self, li_type, li_format, li_value):
+    suffix = self.get_mark_suffix(li_format)
+    if li_type == "bullet":
+      if li_format in CUSTOM_LIST_SYMBOL_MAPS:
+        li_format = CUSTOM_LIST_SYMBOL_MAPS[li_format]
+      return li_format, suffix
+
+    if li_type == "lowerRoman":
+      return roman.toRoman(li_value), suffix
+
+    if li_type == "upperRoman":
+      return roman.toRoman(li_value), suffix
+
+    if li_type == "upperLetter":
+      return chr(li_value + 64), suffix
+
+    if li_type == "lowerLetter":
+      return chr(li_value + 96), suffix
+
+    if li_type == "decimal":
+      return li_value, suffix
+
+    return li_value, suffix
+
+  def get_list_item_format(self, _id, lvl):
+    return self.get_node_object(self.numeric_styles, [_id, lvl, "w:lvlText", "@w:val"])
 
   def get_list_item_id(self, xml: str, only_validate=False):
     list_info = self.get_list_struct(xml)
@@ -719,7 +761,6 @@ class StructExtract:
 
   def normalize_cell_content(self, text: str):
     return text.strip().replace('|', '\|')
-    # return text.strip().replace('\n', '\n').replace('|', '\|')
 
   def is_single_cell_table(self, table: Table):
     number_of_row = len(table.rows)
@@ -735,8 +776,7 @@ class StructExtract:
 
     style = element.style.name.lower()
     if style == 'title':
-      if self.title == '':
-        self.title = text
+      self.title = text
       return True
 
     if self.with_heading == False:

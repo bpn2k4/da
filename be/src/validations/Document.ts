@@ -10,7 +10,8 @@ const validateCreateDocument: ValidateCreateDocument = ({ body }) => {
     note: Joi.string(),
     status: Joi.string().allow(DOCUMENT_STATUS.ERROR, DOCUMENT_STATUS.EXTRACTED, DOCUMENT_STATUS.PROCESSING, DOCUMENT_STATUS.CREATED),
     chunkMethod: Joi.string().allow(DOCUMENT_CHUNKING_METHOD.STRUCT, DOCUMENT_CHUNKING_METHOD.TREE),
-    numberChunk: Joi.number().min(0)
+    numberChunk: Joi.number().min(0),
+    chunk: Joi.boolean()
   })
   const { value: bodyValue, error: bodyError } = bodySchema.validate(body, option)
   return { body: bodyValue, error: bodyError }
@@ -61,13 +62,32 @@ const validateGetDocument: ValidateGetDocument = ({ params }) => {
   const { value: paramsValue, error: paramsError } = paramsSchema.validate(params, option)
   return { params: paramsValue, error: paramsError }
 }
+const validateGetChunksInDocument: ValidateGetChunksDocument = ({ params, query }) => {
+  const paramsSchema = Joi.object({
+    documentId: Joi.string().required()
+  })
+  const querySchema = Joi.object({
+    page: Joi.number().min(0).default(0),
+    limit: Joi.number().min(1).max(100).default(20),
+  })
+  const { value: paramsValue, error: paramsError } = paramsSchema.validate(params, option)
+  const { value: queryValue, error: queryError } = querySchema.validate(query, option)
+  if (paramsError) {
+    return { params: paramsValue, query: queryValue, error: paramsError }
+  }
+  if (queryError) {
+    return { params: paramsValue, query: queryValue, error: queryError }
+  }
+  return { params: paramsValue, query: queryValue, error: undefined }
+}
 
 const DocumentValidator = {
   validateCreateDocument,
   validateUpdateDocument,
   validateGetDocuments,
   validateGetDocument,
-  validateDeleteDocument
+  validateDeleteDocument,
+  validateGetChunksInDocument
 }
 
 type ValidateCreateDocument = (params: ValidationParams) => ({
@@ -106,6 +126,16 @@ type ValidateDeleteDocument = (params: ValidationParams) => ({
 type ValidateGetDocument = (params: ValidationParams) => ({
   params: {
     documentId: string,
+  },
+  error?: ValidationError
+})
+type ValidateGetChunksDocument = (params: ValidationParams) => ({
+  params: {
+    documentId: string,
+  },
+  query: {
+    page: number,
+    limit: number,
   },
   error?: ValidationError
 })

@@ -1,6 +1,7 @@
 import uvicorn
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
 from app.configs import API_URL
 from app.routers import api_v1_router
@@ -26,4 +27,5 @@ def hello():
 
 if __name__ == "__main__":
   print(f'Using config: API_URL={API_URL}')
-  uvicorn.run(app, host="127.0.0.1", port=8000)
+  os.makedirs('./tmp', exist_ok=True)
+  uvicorn.run(app, host="127.0.0.1", port=4001)
