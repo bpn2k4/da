@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { twMerge, useDispatch, useSelector } from '@hooks'
 import { IconMoon, IconSun } from './Icon'
 import { setTheme } from '@slices/System'
+import { Link } from 'react-router-dom'
+import { thunkGetConversations } from '@slices/Chat'
 
 const ChatHistory = () => {
 
@@ -9,7 +11,7 @@ const ChatHistory = () => {
 
   return (
     <div className={twMerge(
-      "w-[260px] h-full overflow-hidden transition-all relative bg-rgb-250 dark:bg-rgb-15",
+      "w-[260px] h-full overflow-hidden transition-all relative bg-rgb-250 dark:bg-rgb-25",
       !show && "w-0"
     )}>
       <ChatHistoryBody />
@@ -25,14 +27,14 @@ const ChatHistoryBody = () => {
   return (
     <div className="h-full flex flex-col">
       <div className="w-full px-2 h-14 center">
-        <button className="w-full h-9 px-2 flex flex-row items-center justify-between py-1 rounded hover:bg-rgb-235 dark:hover:bg-rgb-35">
-          <div className="flex flex-row items-center">
+        <Link to="/" className="w-full h-9 px-2 flex flex-row items-center justify-between py-1 rounded hover:bg-rgb-235 dark:hover:bg-rgb-35">
+          <div className="flex flex-row items-center" >
             <div className="w-7 h-7 center rounded-full border-2 mr-1 dark:border-rgb-75">
               <Icon />
             </div>
             <span className="text-sm">New Chat</span>
           </div>
-        </button>
+        </Link>
       </div>
       <ChatHistoryList />
       <ChatHistoryAction />
@@ -42,18 +44,24 @@ const ChatHistoryBody = () => {
 
 const ChatHistoryList = () => {
 
-  const items = new Array(30).fill(0)
+  const { conversations, limit, page } = useSelector(state => state.chat)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(thunkGetConversations({ limit, page }))
+  }, [limit, page])
 
   return (
     <div className="flex-1 overflow-y-auto px-2 text-sm">
-      {items.map((_, index) => (
-        <button
-          key={index}
-          className="w-full h-9 px-2 flex flex-row items-center py-1 rounded hover:bg-rgb-235 dark:hover:bg-rgb-35">
-          <span className="line-clamp-1">
-            {`Item ${index + 1}`}
+      {conversations.map(({ conversationId, title }) => (
+        <Link
+          key={conversationId}
+          to={`/c/${conversationId}`}
+          className="w-full px-2 flex flex-row items-center py-2 rounded-md hover:bg-rgb-235 dark:hover:bg-rgb-35">
+          <span className="line-clamp-2">
+            {title}
           </span>
-        </button>
+        </Link>
       ))}
     </div>
   )
@@ -64,7 +72,7 @@ const ChatHistoryAction = () => {
   const dispatch = useDispatch()
   const { theme } = useSelector(state => state.system)
 
-  const [show, setShow] = useState(true)
+  const [show, setShow] = useState(false)
 
   const buttonRef = useRef<any>()
   const menuRef = useRef<any>()

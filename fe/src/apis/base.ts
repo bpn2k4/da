@@ -24,7 +24,7 @@ base.interceptors.request.use((config) => {
   if (config.method == 'post' || config.method == 'patch') {
     console.log('[AXIOS]-[SEND]', '\n',
       'Method:', config.method.toUpperCase(), '\n',
-      `URL: ${config.baseURL}/${config.url}`, '\n',
+      `URL: ${config.baseURL}${config.url}`, '\n',
       `Params:`, config.params, '\n',
       'Body:', config.data
     )
@@ -40,7 +40,7 @@ base.interceptors.response.use(
       console.log(
         '[AXIOS]-[RESPONSE]', '\n',
         'Method:', config.method.toUpperCase(), '\n',
-        `URL: ${config.baseURL}/${response.config.url}`, '\n',
+        `URL: ${config.baseURL}${response.config.url}`, '\n',
         `Params:`, config.params, '\n',
         'Response:', response.data, '\n',
       )
@@ -49,7 +49,7 @@ base.interceptors.response.use(
       console.log(
         '[AXIOS]-[RESPONSE]', '\n',
         'Method:', config.method.toUpperCase(), '\n',
-        `URL: ${config.baseURL}/${response.config.url}`, '\n',
+        `URL: ${config.baseURL}${response.config.url}`, '\n',
         'Params:', config.params, '\n',
         'Body:', config.data, '\n',
         'Response:', response.data, '\n',

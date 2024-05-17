@@ -52,6 +52,7 @@ export type Message = {
 
 export type Conversation = {
   conversationId: string,
+  title: String,
   createdAt: string,
   updatedAt: string,
 }

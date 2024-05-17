@@ -2,6 +2,11 @@ import { Document, File } from "@types"
 
 
 const Utils = {
+  tmp: {
+    message: ""
+  },
+
+
   formatDate: (dateString: string) => {
     const date = new Date(dateString)
     const hours = String(date.getHours()).padStart(2, '0')

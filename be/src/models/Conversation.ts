@@ -8,6 +8,10 @@ const Conversation = sql.define('conversation', {
     defaultValue: UUIDV4,
     primaryKey: true,
     allowNull: false
+  },
+  title: {
+    type: TEXT,
+    allowNull: false,
   }
 }, {
   timestamps: true,

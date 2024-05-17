@@ -3,7 +3,9 @@ import Joi, { type ValidationError } from 'joi'
 const option = { abortEarly: false }
 
 const validateCreateConversation: ValidateCreateConversation = ({ body }) => {
-  const bodySchema = Joi.object({})
+  const bodySchema = Joi.object({
+    title: Joi.string().required()
+  })
   const { value: bodyValue, error: bodyError } = bodySchema.validate(body, option)
   return { body: bodyValue, error: bodyError }
 }
@@ -17,7 +19,7 @@ const validateGetConversations: ValidateGetConversations = ({ query }) => {
   return { query: queryValue, error: queryError }
 }
 
-const validateGetMessagesConversation: ValidateGetMessagesConversation = ({ params }) => {
+const validateGetMessagesInConversation: ValidateGetMessagesInConversation = ({ params }) => {
   const paramsSchema = Joi.object({
     conversationId: Joi.string().required()
   })
@@ -29,7 +31,7 @@ const validateGetMessagesConversation: ValidateGetMessagesConversation = ({ para
 const ConversationValidator = {
   validateCreateConversation,
   validateGetConversations,
-  validateGetMessagesConversation
+  validateGetMessagesInConversation
 }
 
 export default ConversationValidator
@@ -42,7 +44,9 @@ type ValidationParams = {
 }
 
 type ValidateCreateConversation = (params: ValidationParams) => ({
-  body: {},
+  body: {
+    title: string
+  },
   error?: ValidationError
 })
 
@@ -60,7 +64,7 @@ type ValidateGetConversation = (params: ValidationParams) => ({
   },
   error?: ValidationError
 })
-type ValidateGetMessagesConversation = (params: ValidationParams) => ({
+type ValidateGetMessagesInConversation = (params: ValidationParams) => ({
   params: {
     conversationId: string,
   }
