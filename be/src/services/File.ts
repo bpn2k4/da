@@ -27,7 +27,9 @@ const createFile = async ({ body: body_, file }: ServiceParams) => {
     const data = await newFile.toJSON()
     data.link = ENVIRONMENT.HOST + '/' + data.path.slice(5)
     delete data.path
-    return data
+    return {
+      file: data
+    }
   }
   if (!body.content) {
     throw new ValidationError('Required one of "file" or "content"')

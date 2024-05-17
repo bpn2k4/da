@@ -2,6 +2,9 @@ console.clear()
 import cors from 'cors'
 import express from 'express'
 import { resolve } from 'path'
+import http from 'http'
+import { Server, Socket } from 'socket.io'
+import socket from '@sockets'
 
 import { ENVIRONMENT } from '@configs'
 import { sql } from '@databases'
@@ -44,7 +47,17 @@ const main = async () => {
 
   app.use(ErrorHandler)
 
-  app.listen(ENVIRONMENT.PORT, () => {
+  const server = http.createServer(app)
+  const io = new Server(server)
+
+  socket.setServer(io)
+
+  io.on('connection', (socket: Socket) => {
+
+
+  })
+
+  server.listen(ENVIRONMENT.PORT, () => {
     console.log(`App is running at http://localhost:${ENVIRONMENT.PORT}`)
   })
 }

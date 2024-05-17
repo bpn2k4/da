@@ -1,6 +1,5 @@
 import { sql } from '@databases'
-import { BOOLEAN, INTEGER, STRING, TEXT, UUID, UUIDV4 } from 'sequelize'
-import { DOCUMENT_CHUNKING_METHOD, DOCUMENT_STATUS } from '@configs'
+import { BOOLEAN, INTEGER, TEXT, UUID, UUIDV4 } from 'sequelize'
 
 const Chunk = sql.define('chunk', {
   chunkId: {

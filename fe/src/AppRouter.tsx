@@ -1,12 +1,14 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom"
+
+import AdminLayout from "@layouts/AdminLayout"
+import ChatLayout from "@layouts/ChatLayout"
 
 import Chat from "@pages/Chat"
-import AdminLayout from "@layouts/AdminLayout"
-import Document from "@pages/Document"
-import ChatLayout from "@layouts/ChatLayout"
-import FileManager from "@pages/FileManager"
-import DocumentManager from "@pages/DocumentManager"
+import Conversation from "@pages/Conversation"
+
 import ChunkManager from "@pages/ChunkManager"
+import DocumentManager from "@pages/DocumentManager"
+import FileManager from "@pages/FileManager"
 
 const routes = [
   {
@@ -18,11 +20,11 @@ const routes = [
     )
   },
   {
-    path: '/admin',
+    path: '/c/:conversationId',
     element: (
-      <AdminLayout>
-        <Document />
-      </AdminLayout>
+      <ChatLayout>
+        <Conversation />
+      </ChatLayout>
     )
   },
   {
@@ -61,7 +63,7 @@ const routes = [
     path: '/admin/*',
     element: (
       <AdminLayout>
-        <Document />
+        <Navigate replace={true} to="/admin/content" />
       </AdminLayout>
     )
   },

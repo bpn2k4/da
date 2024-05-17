@@ -75,6 +75,43 @@ const getDocuments = async (req: Request, res: Response, next: NextFunction) => 
     next(error)
   }
 }
+const getChunksInDocument = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { query } = req
+    const data = await DocumentService.getDocuments({ query })
+    return res.status(STATUS_CODE.SUCCESS).json({
+      status: STATUS_NAME.SUCCESS,
+      ...data
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+const syncDocument = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { query } = req
+    const data = await DocumentService.getDocuments({ query })
+    return res.status(STATUS_CODE.SUCCESS).json({
+      status: STATUS_NAME.SUCCESS,
+      ...data
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+const chunkDocument = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { query } = req
+    const data = await DocumentService.getDocuments({ query })
+    return res.status(STATUS_CODE.SUCCESS).json({
+      status: STATUS_NAME.SUCCESS,
+      ...data
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 
 
 const DocumentController = {
@@ -84,6 +121,9 @@ const DocumentController = {
   getDocument,
   getDocuments,
   updateDocument,
+  getChunksInDocument,
+  syncDocument,
+  chunkDocument
 }
 
 export default DocumentController

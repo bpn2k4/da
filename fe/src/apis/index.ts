@@ -1,3 +1,5 @@
+import ChatApi from './Chat'
+import ConversationApi from './Conversation'
 import DocumentApi from './Document'
 import FileApi from './File'
 
@@ -7,7 +9,9 @@ const Api = {
     FAIL: 'fail',
   },
   FileApi,
-  DocumentApi
+  DocumentApi,
+  ChatApi,
+  ConversationApi
 }
 
 export default Api

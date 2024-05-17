@@ -1,26 +1,27 @@
 import { Document } from "@types"
 import base from "./base"
 
-type DocumentApiType = {
-  getDocuments: GetDocumentsApi,
-  createDocument: CreateDocumentApi,
-  deleteDocument: DeleteDocumentApi
+const getDocuments: GetDocumentsApi = (params) => {
+  const url = '/documents'
+  return base.get(url, { params: params })
 }
 
-const DocumentApi: DocumentApiType = {
-  getDocuments: (params) => {
-    const url = '/documents'
-    return base.get(url, { params: params })
-  },
-  createDocument: (data) => {
-    const url = '/documents'
-    return base.post(url, data)
-  },
-  deleteDocument: (documentId) => {
-    const url = `/documents/${documentId}`
-    return base.delete(url)
-  }
+const createDocument: CreateDocumentApi = (data) => {
+  const url = '/documents'
+  return base.post(url, data)
 }
+const deleteDocument: DeleteDocumentApi = (documentId) => {
+  const url = `/documents/${documentId}`
+  return base.delete(url)
+}
+const DocumentApi = {
+  getDocuments,
+  createDocument,
+  deleteDocument
+}
+
+export default DocumentApi
+
 
 type GetDocumentsApi = (params: {
   page: number,
@@ -42,6 +43,3 @@ type CreateDocumentApi = (data: {
 type DeleteDocumentApi = (documentId: string) => Promise<{
   status: 'success' | 'fail',
 }>
-
-
-export default DocumentApi

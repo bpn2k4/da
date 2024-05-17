@@ -1,9 +1,9 @@
-import { useState } from "react"
-import ReactTextareaAutosize from "react-textarea-autosize"
+import { ChangeEventHandler, KeyboardEventHandler } from 'react'
+import ReactTextareaAutosize from 'react-textarea-autosize'
 
-const ChatInput = () => {
+const ChatInput = (props: ChatInputProps) => {
 
-  const [value, setValue] = useState("")
+  const { onChange, value, maxRows = 6, onKeyDown } = props
 
   return (
     <div className="w-full max-w-[800px] mx-auto pb-4">
@@ -11,13 +11,21 @@ const ChatInput = () => {
         <ReactTextareaAutosize
           className="bg-transparent outline-none resize-none w-full text-sm pr-12"
           value={value}
-          onChange={e => setValue(e.target.value)}
-          maxRows={7} />
+          onKeyDown={onKeyDown}
+          onChange={onChange}
+          maxRows={maxRows} />
         <button className="absolute size-8 rounded right-4 top-1/2 -translate-y-1/2 dark:bg-rgb-55">
         </button>
       </div>
     </div>
   )
+}
+
+type ChatInputProps = {
+  value?: any,
+  onChange?: ChangeEventHandler<HTMLTextAreaElement>,
+  maxRows?: number,
+  onKeyDown?: KeyboardEventHandler<HTMLTextAreaElement>
 }
 
 export default ChatInput

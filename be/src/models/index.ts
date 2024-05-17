@@ -1,6 +1,8 @@
-import Document from './Document'
-import File from './File'
+import Conversation from './Conversation'
 import Chunk from './Chunk'
+import Document from './Document'
+import Message from './Message'
+import File from './File'
 import { sql } from '@databases'
 
 const createAssociation = () => {
@@ -20,9 +22,17 @@ const createAssociation = () => {
     foreignKey: 'documentId',
     as: 'chunks'
   })
+  Message.belongsTo(Conversation, {
+    foreignKey: 'conversationId',
+    as: 'conversation'
+  })
+  Document.hasMany(Chunk, {
+    foreignKey: 'conversationId',
+    as: 'messages'
+  })
 }
 
-const initModel = async (alter = true, force = false) => {
+const initModel = async (alter = true, force = true) => {
   createAssociation()
   // return sql.sync({
   //   alter: alter,
@@ -31,7 +41,10 @@ const initModel = async (alter = true, force = false) => {
 }
 
 export {
+  Conversation,
+  Chunk,
   Document,
+  Message,
   File,
   initModel
 }

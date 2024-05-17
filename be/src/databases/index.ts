@@ -1,3 +1,4 @@
 import sql from './sql'
+import elasticsearch from "./elasticsearch"
 
-export { sql }
+export { sql, elasticsearch }

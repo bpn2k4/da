@@ -66,4 +66,6 @@ type ShowModalConfirmConfig = {
   onConfirm?: any
 }
 
+console.log(Utils.bytesToDisplayString(9514190923))
+
 export default Utils

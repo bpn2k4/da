@@ -2,7 +2,7 @@ import fs from 'fs/promises'
 
 import { ENVIRONMENT } from '@configs'
 import { JoiValidationError, NotFoundError, ValidationError } from '@errors'
-import { Document, File } from '@models'
+import { Document, File, Chunk } from '@models'
 import Utils from '@utils'
 import { DocumentValidator, FileValidator } from '@validations'
 import { sql } from '@databases'
@@ -128,16 +128,56 @@ const getDocuments = async ({ query: query_ }: ServiceParams) => {
   }
 }
 
-const getChunksInDocument = async ({ query: query_ }: ServiceParams) => {
-
+const getChunksInDocument = async ({ params: params_, query: query_ }: ServiceParams) => {
+  const { params, query, error } = DocumentValidator.validateGetChunksInDocument({ params: params_, query: query_ })
+  if (error) {
+    throw new JoiValidationError(error)
+  }
+  const document = await Document.findOne({
+    where: {
+      documentId: params.documentId,
+      deleted: false
+    }
+  })
+  if (!document) {
+    throw new NotFoundError(params.documentId)
+  }
+  const { rows: chunks, count } = await Chunk.findAndCountAll({
+    where: { documentId: params.documentId },
+    limit: query.limit,
+    offset: query.limit * query.page
+  })
+  return { chunks, total: count }
 }
 
 const chunkDocument = async ({ params: params_ }: ServiceParams) => {
 
 }
 
-const syncDocument = async () => {
-
+const syncDocument = async ({ params: params_ }: ServiceParams) => {
+  const { params, error } = DocumentValidator.validateSyncDocument({ params: params_ })
+  if (error) {
+    throw new JoiValidationError(error)
+  }
+  const document = await Document.findOne({
+    where: {
+      documentId: params.documentId,
+      deleted: false
+    },
+    include: [
+      { model: File, as: 'file' }
+    ],
+  })
+  if (!document) {
+    throw new NotFoundError(params.documentId)
+  }
+  const { count } = await Chunk.findAndCountAll({
+    where: { documentId: params.documentId }
+  })
+  await document.update({
+    numberChunk: count
+  })
+  return { document }
 }
 
 
@@ -148,6 +188,8 @@ const DocumentService = {
   getDocument,
   getDocuments,
   updateFile,
+  getChunksInDocument,
+  syncDocument
 }
 
 type ServiceParams = {

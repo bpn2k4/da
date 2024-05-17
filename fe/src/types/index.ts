@@ -40,3 +40,18 @@ export type Chunk = {
   updatedAt: string,
   checked: boolean,
 }
+
+export type Message = {
+  messageId: string,
+  conversationId: string,
+  role: 'USER' | 'SYSTEM',
+  text: string,
+  createdAt: string,
+  updatedAt: string,
+}
+
+export type Conversation = {
+  conversationId: string,
+  createdAt: string,
+  updatedAt: string,
+}

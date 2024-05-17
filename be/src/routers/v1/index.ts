@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { FileUpload } from '@middlewares'
-import { DocumentController, FileController } from '@controllers'
+import { ChatController, ConversationController, DocumentController, FileController, MessageController } from '@controllers'
 
 const router = Router()
 
@@ -14,5 +14,19 @@ router.delete('/files/:fileId', FileController.deleteFile)
 router.post('/documents', DocumentController.createDocument)
 router.get('/documents', DocumentController.getDocuments)
 router.get('/documents/:documentId', DocumentController.getDocument)
+router.patch('/documents/:documentId', DocumentController.getDocument)
+router.delete('/documents', DocumentController.getDocument)
+router.delete('/documents/:documentId', DocumentController.getDocument)
+router.get('/documents/:documentId/chunks', DocumentController.getChunksInDocument)
+router.post('/documents/:documentId/chunk', DocumentController.chunkDocument)
+router.get('/documents/:documentId/sync', DocumentController.syncDocument)
+
+router.post('/api/v1/conversations', ConversationController.createConversation)
+router.get('/api/v1/conversations', ConversationController.createConversation)
+router.get('/api/v1/conversations/:conversationId/messages', ConversationController.createConversation)
+
+router.get('/api/v1/messages', MessageController.createMessage)
+
+router.post('/api/v1/chat', ChatController.createChat)
 
 export default router

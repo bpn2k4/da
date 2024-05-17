@@ -55,6 +55,7 @@ const validateDeleteDocument: ValidateDeleteDocument = ({ params }) => {
   const { value: paramsValue, error: paramsError } = paramsSchema.validate(params, option)
   return { params: paramsValue, error: paramsError }
 }
+
 const validateGetDocument: ValidateGetDocument = ({ params }) => {
   const paramsSchema = Joi.object({
     documentId: Joi.string().required()
@@ -62,13 +63,14 @@ const validateGetDocument: ValidateGetDocument = ({ params }) => {
   const { value: paramsValue, error: paramsError } = paramsSchema.validate(params, option)
   return { params: paramsValue, error: paramsError }
 }
+
 const validateGetChunksInDocument: ValidateGetChunksDocument = ({ params, query }) => {
   const paramsSchema = Joi.object({
     documentId: Joi.string().required()
   })
   const querySchema = Joi.object({
     page: Joi.number().min(0).default(0),
-    limit: Joi.number().min(1).max(100).default(20),
+    limit: Joi.number().min(1).max(100).default(30),
   })
   const { value: paramsValue, error: paramsError } = paramsSchema.validate(params, option)
   const { value: queryValue, error: queryError } = querySchema.validate(query, option)
@@ -81,13 +83,22 @@ const validateGetChunksInDocument: ValidateGetChunksDocument = ({ params, query 
   return { params: paramsValue, query: queryValue, error: undefined }
 }
 
+const validateSyncDocument: ValidateSyncDocument = ({ params }) => {
+  const paramsSchema = Joi.object({
+    documentId: Joi.string().required()
+  })
+  const { value: paramsValue, error: paramsError } = paramsSchema.validate(params, option)
+  return { params: paramsValue, error: paramsError }
+}
+
 const DocumentValidator = {
   validateCreateDocument,
   validateUpdateDocument,
   validateGetDocuments,
   validateGetDocument,
   validateDeleteDocument,
-  validateGetChunksInDocument
+  validateGetChunksInDocument,
+  validateSyncDocument
 }
 
 type ValidateCreateDocument = (params: ValidationParams) => ({
@@ -136,6 +147,12 @@ type ValidateGetChunksDocument = (params: ValidationParams) => ({
   query: {
     page: number,
     limit: number,
+  },
+  error?: ValidationError
+})
+type ValidateSyncDocument = (params: ValidationParams) => ({
+  params: {
+    documentId: string,
   },
   error?: ValidationError
 })

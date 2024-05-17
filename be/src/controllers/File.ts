@@ -7,6 +7,7 @@ const createFile = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { body, file } = req
     const data = await FileService.createFile({ body, file })
+    console.log(data)
     return res.status(STATUS_CODE.SUCCESS).json({
       status: STATUS_NAME.SUCCESS,
       ...data
